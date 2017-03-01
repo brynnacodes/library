@@ -1,7 +1,12 @@
 <?php
     require_once 'src/Author.php';
 
-    $server = 'mysql:unix_socket=/Applications/MAMP/tmp/mysql/mysql.sock;dbname=library_test';
+    /**
+    * @backupGlobals disabled
+    * @backupStaticAttributes disabled
+    */
+
+    $server = 'mysql:host=localhost:8889;dbname=library_test';
     $username = 'root';
     $password = 'root';
     $DB = new PDO($server, $username, $password);
@@ -23,6 +28,72 @@
             $result = $test_author->getName();
             //Assert
             $this->assertEquals("F. Scott Fitzgerald", $result);
+        }
+
+        function test_getId()
+        {
+            $name = "F. Scott Fitzgerald";
+            $test_author = new Author ($name);
+            $test_author->save();
+
+            $result = $test_author->getId();
+
+            $this->assertEquals(true, is_numeric($result));
+        }
+
+        function test_save()
+        {
+            $name = "F. Scott Fitzgerald";
+            $test_author = new Author ($name);
+            $test_author->save();
+
+            $result = Author::getAll();
+
+            $this->assertEquals($test_author, $result[0]);
+        }
+
+        function test_getAll()
+        {
+            $name1 = "F. Scott Fitzgerald";
+            $test_author1 = new Author ($name1);
+            $test_author1->save();
+
+            $name2 = "Earnest Hemingway";
+            $test_author2 = new Author ($name2);
+            $test_author2->save();
+
+            $result = Author::getAll();
+
+            $this->assertEquals([$test_author1, $test_author2], $result);
+        }
+
+        function test_find()
+        {
+            $name1 = "F. Scott Fitzgerald";
+            $test_author1 = new Author ($name1);
+            $test_author1->save();
+
+            $name2 = "Earnest Hemingway";
+            $test_author2 = new Author ($name2);
+            $test_author2->save();
+
+            $result = Author::find($test_author1->getId());
+
+            $this->assertEquals($test_author1, $result);
+        }
+
+        function test_updateName()
+        {
+            $name = "F. Scott Fitzgerald";
+            $test_author = new Author ($name);
+            $test_author->save();
+
+            $new_name = "F. Tott Fitzgerald";
+            $test_author->updateName($new_name);
+            $result = Author::getAll();
+
+            $this->assertEquals($new_name, $result[0]->getName());
+
         }
     }
 ?>

@@ -15,7 +15,7 @@
         $this->title = $new_title;
     }
 
-    function getName()
+    function getTitle()
     {
         return $this->title;
     }
@@ -25,6 +25,11 @@
         return $this->id;
     }
 
-
+    function save()
+    {
+        $exec = $GLOBALS['DB']->prepare("INSERT INTO books (title) VALUES (:title)");
+        $exec->execute([':title' => $this->getTitle()]);
+        $this->id = $GLOBALS['DB']->lastInsertId();
+    }
 }
 ?>
