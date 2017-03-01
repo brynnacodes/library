@@ -44,6 +44,25 @@
         $GLOBALS['DB']->exec("DELETE FROM authors WHERE id = {$this->getid()};");
     }
 
+    function addBook($book)
+    {
+        $exec = $GLOBALS['DB']->prepare("INSERT INTO authorship (author_id, book_id) VALUES (:author_id, :book_id);");
+        $exec->execute([':book_id'=>$book->getId(), ':author_id'=>$this->getId()]);
+    }
+
+    function getBooks()
+    {
+        $returned_books = $GLOBALS['DB']->query("SELECT books.* FROM authors JOIN authorship ON (authorship.author_id = authors.id) JOIN books ON (books.id = authorship.book_id) WHERE authors.id = {$this->getId()};");
+        $books = [];
+        foreach($returned_books as $book) {
+            $title = $book['title'];
+            $id = $book['id'];
+            $new_book = new Book($title, $id);
+            array_push($books, $new_book);
+        }
+        return $books;
+    }
+    
     static function find($id)
     {
         $found_author;

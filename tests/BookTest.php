@@ -90,6 +90,27 @@
             $this->assertEquals($new_title, $result[0]->getTitle());
 
         }
+
+        function test_getAuthors()
+        {
+            $name = "F. Scott Fitzgerald";
+            $test_author = new Author ($name);
+            $test_author->save();
+
+            $name2 = "Ernest Hemmingway";
+            $test_author2 = new Author ($name);
+            $test_author2->save();
+
+            $title = "Ruining Women's Lives: An Instructional Guide";
+            $test_book = new Book ($title);
+            $test_book->save();
+
+            $test_book->addAuthor($test_author);
+            $test_book->addAuthor($test_author2);
+            $result = $test_book->getAuthors();
+
+            $this->assertEquals([$test_author, $test_author2], $result);
+        }
     }
 
 

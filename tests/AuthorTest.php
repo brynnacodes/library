@@ -95,5 +95,26 @@
             $this->assertEquals($new_name, $result[0]->getName());
 
         }
+
+        function test_getBooks()
+        {
+            $title = "Ruining Women's Lives: An Instructional Guide pt. 1";
+            $test_book = new Book ($title);
+            $test_book->save();
+
+            $title2 = "Ruining Your Own Life: An Instructional Guide pt. 2";
+            $test_book2 = new Book ($title);
+            $test_book2->save();
+
+            $name = "Jack Kerouac";
+            $test_author = new Author ($name);
+            $test_author->save();
+
+            $test_author->addBook($test_book);
+            $test_author->addBook($test_book2);
+            $result = $test_author->getBooks();
+
+            $this->assertEquals([$test_book, $test_book2], $result);
+        }
     }
 ?>
