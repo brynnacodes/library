@@ -31,5 +31,47 @@
         $exec->execute([':title' => $this->getTitle()]);
         $this->id = $GLOBALS['DB']->lastInsertId();
     }
+
+    function updateTitle($new_title)
+    {
+        $exec = $GLOBALS['DB']->prepare("UPDATE books SET title = :title WHERE id = :id;");
+        $exec->execute([':title' => $new_title, 'id' => $this->getId()]);
+        $this->setTitle($new_title);
+    }
+
+    function delete()
+    {
+        $GLOBALS['DB']->exec("DELETE FROM books WHERE id = {$this->getid()};");
+    }
+
+    static function find($id)
+    {
+        $found_book;
+        $books = Book::getAll();
+        foreach ($books as $book) {
+            if ($book->getId() == $id) {
+                $found_book = $book;
+            }
+        }
+        return $found_book;
+    }
+
+    static function getAll()
+    {
+        $returned_books = $GLOBALS['DB']->query("SELECT * FROM books;");
+        $books = [];
+        foreach ($returned_books as $book) {
+            $title = $book['title'];
+            $id = $book['id'];
+            $new_book = new Book ($title, $id);
+            array_push($books, $new_book);
+        }
+        return $books;
+    }
+
+    static function deleteAll()
+    {
+        $GLOBALS['DB']->exec("DELETE FROM books;");
+    }
 }
 ?>
