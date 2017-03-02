@@ -76,7 +76,11 @@
         $returned_due_date = $GLOBALS['DB']->query("SELECT due_date FROM checkouts WHERE patron_id = {$this->getId()};");
 
         $due_date = $returned_due_date->fetch(PDO::FETCH_ASSOC);
+        if ( $due_date) {
         return implode(',', $due_date);
+        } else {
+            return false;
+        }
     }
 
     function getCheckOutDate()

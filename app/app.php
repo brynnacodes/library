@@ -54,11 +54,12 @@
         $found_book = Book::find($book_id);
         $add_book = $patron->addBook($found_book);
 
+
         $patron_books = $patron->getBooks();
         $checkout_date = $patron->getCheckOutDate();
         $due_date = $patron->getDueDate();
+    
 
-        // return $app['twig']->render("patron.html.twig", ['patron_books'=>$patron_books,'books'=>$books,'checkout_date' => $checkout_date, 'due_date' => $due_date, 'patron' => $patron]);
         return $app->redirect("/patrons/".$id);
     });
 
@@ -66,7 +67,6 @@
         $book_id = $_POST['book'];
         $found_book = Book::find($book_id);
         $patron = Patron::find($id);
-
 
         $patron->dropBooks();
         return $app->redirect("/patrons/".$id);
