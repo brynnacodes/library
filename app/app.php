@@ -40,8 +40,36 @@
         $books = Book::getAll();
         $authors = Author::getAll();
         $patron = Patron::find($id);
+        $checkout_date = $patron->getCheckOutDate();
+        $due_date = $patron->getDueDate();
         $patron_books = $patron->getBooks();
-        return $app['twig']->render("patron.html.twig", ['books' => $books, 'patron_books' => $patron_books, 'authors' => $authors, 'patron' => $patron]);
+        return $app['twig']->render("patron.html.twig", ['books' => $books, 'patron_books' => $patron_books, 'authors' => $authors, 'patron' => $patron, 'checkout_date' => $checkout_date, 'due_date'=> $due_date]);
+    });
+
+    $app->post("/checkout_book/{id}", function($id) use($app) {
+        $patron = Patron::find($id);
+        $books = Book::getAll();
+
+        $book_id = $_POST['book'];
+        $found_book = Book::find($book_id);
+        $add_book = $patron->addBook($found_book);
+
+        $patron_books = $patron->getBooks();
+        $checkout_date = $patron->getCheckOutDate();
+        $due_date = $patron->getDueDate();
+
+        // return $app['twig']->render("patron.html.twig", ['patron_books'=>$patron_books,'books'=>$books,'checkout_date' => $checkout_date, 'due_date' => $due_date, 'patron' => $patron]);
+        return $app->redirect("/patrons/".$id);
+    });
+
+    $app->post("/return_book/{id}", function($id) use($app) {
+        $book_id = $_POST['book'];
+        $found_book = Book::find($book_id);
+        $patron = Patron::find($id);
+
+
+        $patron->dropBooks();
+        return $app->redirect("/patrons/".$id);
     });
 
     $app->post('/add_book', function() use($app) {
@@ -61,32 +89,19 @@
     $app->get('/books/{id}', function($id) use($app) {
         $book = Book::find($id);
         $authors = Author::getAll();
-        $author = $book->getAuthors();
-        return $app['twig']->render('book.html.twig', ['book' => $book, 'author' => $author, 'authors' => $authors]);
+        $book_authors = $book->getAuthors();
+        return $app['twig']->render('book.html.twig', ['book' => $book, 'book_authors' => $book_authors, 'authors' => $authors]);
     });
 
     $app->post('/add_book_author/{id}', function($id) use ($app) {
         $author_id = $_POST['author'];
         $author = Author::find($author_id);
-        var_dump($author_id);
         $book = Book::find($id);
-        var_dump($book);
         $book->addAuthor($author);
         return $app->redirect('/books/'.$id);
     });
 
-    $app->post("/checkout_book/{id}", function($id) use($app) {
-        $patron = Patron::find($id);
-        $books = Book::getAll();
 
-        $book_id = $_POST['book'];
-        $found_book = Book::find($book_id);
-        $patron->addBook($found_book);
-
-        $patron_books = $patron->getBooks();
-
-        return $app['twig']->render("patron.html.twig", ['patron_books'=>$patron_books,'books'=>$books, 'patron' => $patron]);
-    });
 
     return $app;
 ?>

@@ -44,7 +44,7 @@
 
     function delete()
     {
-        $GLOBALS['DB']->exec("DELETE FROM patrons WHERE id = {$this->getid()};");
+        $GLOBALS['DB']->exec("DELETE FROM patrons WHERE id = {$this->getId()};");
     }
 
     function addBook($book)
@@ -54,7 +54,7 @@
         // $exec->execute([':book_id'=>$book->getId(), ':patron_id'=>$this->getId()]);
 
         //successfully adds current date and due date but breaks getBooks()
-        $GLOBALS['DB']->exec("INSERT INTO checkouts (patron_id, book_id, checkout_date, due_date) VALUES ({$book->getId()}, {$this->getId()},  CURDATE(), CURDATE() + INTERVAL 14 DAY);");
+        $GLOBALS['DB']->exec("INSERT INTO checkouts (patron_id, book_id, checkout_date, due_date) VALUES ({$this->getId()}, {$book->getId()}, CURDATE(), CURDATE() + INTERVAL 14 DAY);");
     }
 
 
@@ -71,6 +71,21 @@
         return $books;
     }
 
+    function getDueDate()
+    {
+        $returned_due_date = $GLOBALS['DB']->query("SELECT due_date FROM checkouts WHERE patron_id = {$this->getId()};");
+
+        $due_date = $returned_due_date->fetch(PDO::FETCH_ASSOC);
+        return implode(',', $due_date);
+    }
+
+    function getCheckOutDate()
+    {
+
+        $checkout_date = $GLOBALS['DB']->query("SELECT checkout_date FROM checkouts WHERE patron_id = {$this->getId()};");
+        return $checkout_date;
+    }
+
     function returnBook($new_status)
     {
         $exec = $GLOBALS['DB']->prepare("UPDATE checkout SET active_status = :active_status WHERE id = :id;");
@@ -79,7 +94,7 @@
 
     function dropBooks()
     {
-        $GLOBALS['DB']->exec("DELETE FROM checkouts WHERE book_id = {$this->getId()};");
+        $GLOBALS['DB']->exec("DELETE FROM checkouts WHERE patron_id = {$this->getId()};");
     }
 
     static function find($id)
