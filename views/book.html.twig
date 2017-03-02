@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{book.getTitle}}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <h2>{{book.getTitle}}, like a man.</h2>
+            <h3>No lady stuff allowed.</h3>
+            <h3>Author/s:</h3>
+            <p>
+                {% if authors is not empty %}
+                <ul>
+                    {% for author in authors %}
+                        <li>{{ author.getName }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </p>
+
+            <form action="/add_book_author/{{book.getId()}}" method="post">
+                <label for="author">Add an author:</label>
+                <select id="author" name="author">
+                    {% for author in authors %}
+                    <option value="{{author.getId()}}">{{author.getName}}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" name="button">Add Author</button>
+            </form>
+
+            <a href="/"><button>Home</button></a>
+        </div>
+    </body>
+</html>

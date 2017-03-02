@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>L.S.D.M.</title>
+    </head>
+    <body>
+        <div class="container">
+            <h3>Titles in the Library</h3>
+            {% if books is not empty%}
+            <ul>
+                {% for book in books%}
+                    <a href="/books/{{book.getId}}"><li>{{book.getTitle}}</li></a>
+                {% endfor%}
+            {% else %}
+                <p>
+                    There are no books in library.
+                </p>
+            {% endif %}
+            <h3>Checkout Books:</h3>
+            <form action="/checkout_book" method="post">
+                {% for book in books %}
+                <input type="checkbox" name="{{ book.getId }}" value="{{ book.getId }}">
+                <label for="{{ book.getTitle }}">{{ book.getTitle }}</label>
+                {% endfor %}
+                <button class="btn" type="submit" name="button">DOIT</button>
+            </form>
+            </form>
+            <a href="/"><button>Home</button></a>
+        </div>
+    </body>
+</html>

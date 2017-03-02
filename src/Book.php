@@ -27,7 +27,7 @@
 
     function save()
     {
-        $exec = $GLOBALS['DB']->prepare("INSERT INTO books (title) VALUES (:title)");
+        $exec = $GLOBALS['DB']->prepare("INSERT INTO books (title) VALUES (:title);");
         $exec->execute([':title' => $this->getTitle()]);
         $this->id = $GLOBALS['DB']->lastInsertId();
     }
@@ -42,12 +42,13 @@
     function delete()
     {
         $GLOBALS['DB']->exec("DELETE FROM books WHERE id = {$this->getid()};");
+        $GLOBALS['DB']->exec("DELETE FROM authorship WHERE book_id = {$this->getId()};");
     }
 
     function addAuthor($author)
     {
         $exec = $GLOBALS['DB']->prepare("INSERT INTO authorship (author_id, book_id) VALUES (:author_id, :book_id);");
-        $exec->execute([':book_id'=>$this->getId(), ':author_id'=>$author->getId()]);
+        $exec->execute([':author_id'=>$author->getId(), ':book_id'=>$this->getId()]);
     }
 
     function getAuthors()

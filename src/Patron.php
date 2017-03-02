@@ -66,6 +66,18 @@
         return $books;
     }
 
+    function checkoutBook($new_status)
+    {
+        $exec = $GLOBALS['DB']->prepare("UPDATE checkout SET active_status = :active_status WHERE id = :id;");
+        $exec->execute([':'])
+
+    }
+
+    function returnBook()
+    {
+
+    }
+
     function dropBooks()
     {
         $GLOBALS['DB']->exec("DELETE FROM checkouts WHERE book_id = {$this->getId()};");

@@ -8,9 +8,9 @@
 
     class BookTest extends PHPUnit_Framework_TestCase
     {
-    protected function tearDown()
+        protected function tearDown()
         {
-        Book::deleteAll();
+            Book::deleteAll();
         }
 
         function test_getTitle()
