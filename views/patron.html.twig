@@ -6,10 +6,10 @@
     </head>
     <body>
         <div class="container">
-            <h3>Titles in the Library</h3>
-            {% if books is not empty%}
+            <h3>Titles in your personal Library</h3>
+            {% if patron_books is not empty%}
             <ul>
-                {% for book in books%}
+                {% for book in patron_books%}
                     <a href="/books/{{book.getId}}"><li>{{book.getTitle}}</li></a>
                 {% endfor%}
             {% else %}
@@ -19,15 +19,16 @@
             {% endif %}
 
             <h3>Checkout Books:</h3>
-            <form action="/checkout_book" method="post">
-                {% for book in books %}
-                <input type="checkbox" name="{{ book.getId }}" value="1">
-                <label for="{{ book.getTitle }}">{{ book.getTitle }}</label>
-                {% endfor %}
-                <button class="btn" type="submit" name="button">checkout book</button>
-            </form>
 
-            <a href="/"></a>
+            <form action="/checkout_book/{{patron.getId}}" method="post">
+                <label for="book">Choose a book:</label>
+                <select id="book" name="book">
+                    {% for book in books %}
+                    <option value="{{book.getId()}}">{{book.getTitle}}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" name="button">Checkout Book</button>
+            </form>
             <a href="/"><button>Home</button></a>
         </div>
     </body>

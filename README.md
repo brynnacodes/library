@@ -1,8 +1,8 @@
-# _{Application Name}_
+# _The Library of Sad Dead Men_
 
-#### _{Brief description of application}, {Date of current version}_
+#### _A library of chaotic literary heroes, 03/01/17_
 
-#### By _**{List of contributors}**_
+#### By _**Brynna Klamkin-McCarter & Katharyn Reed**_
 
 ## Description
 

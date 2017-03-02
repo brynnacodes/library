@@ -49,9 +49,14 @@
 
     function addBook($book)
     {
-        $exec = $GLOBALS['DB']->prepare("INSERT INTO checkouts (patron_id, book_id) VALUES (:patron_id, :book_id);");
-        $exec->execute([':book_id'=>$book->getId(), ':patron_id'=>$this->getId()]);
+        //this function successfully adds books to a patron's account
+        // $exec = $GLOBALS['DB']->prepare("INSERT INTO checkouts (patron_id, book_id) VALUES (:patron_id, :book_id);");
+        // $exec->execute([':book_id'=>$book->getId(), ':patron_id'=>$this->getId()]);
+
+        //successfully adds current date and due date but breaks getBooks()
+        $GLOBALS['DB']->exec("INSERT INTO checkouts (patron_id, book_id, checkout_date, due_date) VALUES ({$book->getId()}, {$this->getId()},  CURDATE(), CURDATE() + INTERVAL 14 DAY);");
     }
+
 
     function getBooks()
     {
@@ -66,7 +71,7 @@
         return $books;
     }
 
-    function checkoutBook($new_status)
+    function returnBook($new_status)
     {
         $exec = $GLOBALS['DB']->prepare("UPDATE checkout SET active_status = :active_status WHERE id = :id;");
         $exec->execute([':active_status' => $new_status, ':id' => $this->getId()]);

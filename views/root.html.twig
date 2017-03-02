@@ -9,9 +9,20 @@
         <div class = "container">
             <h1>A Library of Sad Dead Men</h1>
 
-            <a href="/librarian"><h3>Librarian sign-in</h3></a>
-            <a href="/patron"><h3>Patron sign-in</h3>
+            <h3>Librarian sign-in</h3>
+            <a href="/librarian">Go to librarian portal.</a>
 
+            <h3>Patron sign-in</h3>
+            {% for patron in patrons %}
+            <a href="/patrons/{{patron.getId}}"><p>{{patron.getName}}</p></a>
+            {%endfor%}
+
+            <h3>Add a new patron:</h3>
+            <form action="/add_patron" method="post">
+                <label for="add-patron">Enter your name:</label>
+                <input id="add-patron" type="text" name="name" placeholder="Enter first and last name here...">
+                <button type="submit" name="button">Add patron</button>
+            </form>
         </div>
     </body>
 </html>

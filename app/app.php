@@ -19,8 +19,15 @@
     $app['debug'] = true;
 
     $app->get('/', function() use($app) {
-        $result = 'hello';
-        return $app["twig"]->render("root.html.twig", ['result' => $result]);
+        $patrons = Patron::getAll();
+        return $app["twig"]->render("root.html.twig", ['patrons' => $patrons]);
+    });
+
+    $app->post('/add_patron', function() use($app) {
+        $name = $_POST['name'];
+        $new_patron = new Patron($name);
+        $new_patron->save();
+        return $app->redirect('/');
     });
 
     $app->get('/librarian', function() use($app) {
@@ -29,10 +36,12 @@
         return $app['twig']->render("librarian.html.twig", ['books' => $books, 'authors' => $authors]);
     });
 
-    $app->get('/patron', function() use($app) {
+    $app->get('/patrons/{id}', function($id) use($app) {
         $books = Book::getAll();
         $authors = Author::getAll();
-        return $app['twig']->render("patron.html.twig", ['books' => $books, 'authors' => $authors]);
+        $patron = Patron::find($id);
+        $patron_books = $patron->getBooks();
+        return $app['twig']->render("patron.html.twig", ['books' => $books, 'patron_books' => $patron_books, 'authors' => $authors, 'patron' => $patron]);
     });
 
     $app->post('/add_book', function() use($app) {
@@ -66,8 +75,17 @@
         return $app->redirect('/books/'.$id);
     });
 
-    $app->post("/checkout_book", function() use($app) {
+    $app->post("/checkout_book/{id}", function($id) use($app) {
+        $patron = Patron::find($id);
+        $books = Book::getAll();
 
+        $book_id = $_POST['book'];
+        $found_book = Book::find($book_id);
+        $patron->addBook($found_book);
+
+        $patron_books = $patron->getBooks();
+
+        return $app['twig']->render("patron.html.twig", ['patron_books'=>$patron_books,'books'=>$books, 'patron' => $patron]);
     });
 
     return $app;
