@@ -1,0 +1,13 @@
+body {
+    background-image: url("/../img/background.jpg");
+    /*background-repeat: no-repeat;*/
+    background-size: 30vw auto;
+}
+
+.container {
+    background-color: white;
+}
+
+.container h1 {
+    text-align: center;
+}
