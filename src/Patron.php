@@ -57,7 +57,6 @@
         $GLOBALS['DB']->exec("INSERT INTO checkouts (patron_id, book_id, checkout_date, due_date) VALUES ({$this->getId()}, {$book->getId()}, CURDATE(), CURDATE() + INTERVAL 14 DAY);");
     }
 
-
     function getBooks()
     {
         $returned_books = $GLOBALS['DB']->query("SELECT books.* FROM patrons JOIN checkouts ON (checkouts.patron_id = patrons.id) JOIN books ON (books.id = checkouts.book_id) WHERE patrons.id = {$this->getId()};");
